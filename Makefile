@@ -38,25 +38,21 @@ GLOBAL_LD_FLAGS += -Wl,--gc-sections
 GLOBAL_LD_FLAGS += -Wl,--print-memory-usage
 GLOBAL_LD_FLAGS += -specs=nano.specs -specs=nosys.specs
 
-$(info Bootloader objects: $(BOOT_OBJS))
-$(info Bootloader obj dir: $(BOOT_OBJ_DIR))
-$(info Application objects: $(APP_OBJS))
-$(info Application obj dir: $(APP_OBJ_DIR))
 # Rules
-all: clean out_dir bin
+all: clean bin
 
-bin: out_dir $(BIN)
+bin: $(BIN)
 
-app: out_dir $(APP_BIN)
+app: $(APP_BIN)
 
-boot: out_dir $(BOOT_BIN)
+boot: $(BOOT_BIN)
 
 # Whole binary file
 $(BIN): $(BOOT_BIN) $(APP_BIN)
 	cat $^ > $@
-	$(OBJCOPY) --input-target=binary --output-target=elf32-little $@
 
 $(APP_BIN): $(APP_ELF)
+	$(info Creating $@)
 	$(OBJCOPY) $< $@ -O binary
 	$(SIZE) $<
 
@@ -74,48 +70,26 @@ $(BOOT_ELF): $(BOOT_OBJS)
 	$(CC) $(BOOT_LD_FLAGS) $(GLOBAL_LD_FLAGS) $(BOOT_OBJS) -o $@
 
 # Application objects rules
-$(APP_OBJ_DIR)/%.o: $(APP_SRC_DIR)/%.c
+$(APP_OBJ_DIR)/%.o: %.c
+	@mkdir -p $(@D)
 	$(info APP: processing $< to $@)
 	$(CC) $(GLOBAL_C_FLAGS) $(APP_C_FLAGS) $(APP_HEADERS) -c $< -o $@
 
-$(APP_OBJ_DIR)/%.o: $(COMMON_C_DIR)/%.c
-	$(info APP: processing $< to $@)
-	$(CC) $(GLOBAL_C_FLAGS) $(APP_C_FLAGS) $(APP_HEADERS) -c $< -o $@
-
-$(APP_OBJ_DIR)/%.o: $(APP_SRC_DIR)/%.s
+$(APP_OBJ_DIR)/%.o: %.s
+	@mkdir -p $(@D)
 	$(info APP: processing $< to $@)
 	$(CC) $(GLOBAL_C_FLAGS) $(APP_HEADERS) -c $< -o $@
 
 # Bootloader objects rules
-$(BOOT_OBJ_DIR)/%.o: $(BOOT_SRC_DIR)/%.c
+$(BOOT_OBJ_DIR)/%.o: %.c
+	@mkdir -p $(@D)
 	$(info BOOT: processing $< to $@)
 	$(CC) $(GLOBAL_C_FLAGS) $(BOOT_C_FLAGS) $(BOOT_HEADERS) -c $< -o $@
 
-$(BOOT_OBJ_DIR)/%.o: $(COMMON_C_DIR)/%.c
-	$(info BOOT: processing $< to $@)
-	$(CC) $(GLOBAL_C_FLAGS) $(BOOT_C_FLAGS) $(BOOT_HEADERS) -c $< -o $@
-
-$(BOOT_OBJ_DIR)/%.o: $(BOOT_SRC_DIR)/%.s
+$(BOOT_OBJ_DIR)/%.o: %.s
+	@mkdir -p $(@D)
 	$(info BOOT: processing $< to $@)
 	$(CC) $(GLOBAL_C_FLAGS) $(BOOT_HEADERS) -c $< -o $@
-
-.PHONY: out_dir
-out_dir: $(BOOT_BIN_DIR) $(BOOT_OBJ_DIR) $(APP_BIN_DIR) $(APP_OBJ_DIR) $(BIN_DIR)
-
-$(BOOT_BIN_DIR):
-	mkdir $(BOOT_BIN_DIR)
-
-$(APP_BIN_DIR):
-	mkdir $(APP_BIN_DIR)
-
-$(BIN_DIR):
-	mkdir $(BIN_DIR)
-
-$(APP_OBJ_DIR): $(APP_BIN_DIR)
-	mkdir $(APP_OBJ_DIR)
-
-$(BOOT_OBJ_DIR): $(BOOT_BIN_DIR)
-	mkdir $(BOOT_OBJ_DIR)
 
 clean:
 	rm -rf $(BOOT_BIN_DIR)/*

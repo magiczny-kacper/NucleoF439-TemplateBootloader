@@ -1,6 +1,7 @@
 MCUBOOT_DIR = Common/External/mcuboot/boot/bootutil
 MCUBOOT_SRC_DIR = $(MCUBOOT_DIR)/Src
 MCUBOOT_HEADER_DIR = -I$(MCUBOOT_DIR)/include/
+MCUBOOT_HEADER_DIR += -ICommon/mcuboot_port/
 
 MCUBOOT_SOURCES =
 MCUBOOT_SOURCES +=  $(MCUBOOT_SRC_DIR)/loader.c

@@ -1,10 +1,10 @@
-APP_DIR = ./Application
+APP_DIR = Application
 APP_SRC_DIR = $(APP_DIR)/Src
 APP_BIN_DIR = $(APP_DIR)/Build
 APP_OBJ_DIR = $(APP_BIN_DIR)/obj
 
 APP_HEADERS =
-APP_HEADERS += -I./Common/Linker/
+APP_HEADERS += -ICommon/Linker/
 
 APP_C_SOURCES =
 APP_C_SOURCES += $(APP_SRC_DIR)/main.c
