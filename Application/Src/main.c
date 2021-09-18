@@ -1,7 +1,8 @@
 /* app.c */
-#include <inttypes.h>
+#include <stdint.h>
 #include "memory_map.h"
 
 int main(void) {
-  while (1) {}
+  while (1) {};
+  return 0;
 }
