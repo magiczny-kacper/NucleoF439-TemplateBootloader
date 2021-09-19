@@ -1,6 +1,0 @@
-[submodule "Common/External/mcuboot"]
-	path = Common/External/mcuboot
-	url = https://github.com/mcu-tools/mcuboot.git
-[submodule "Common/External/tinycrypt"]
-	path = Common/External/tinycrypt
-	url = https://github.com/intel/tinycrypt.git
