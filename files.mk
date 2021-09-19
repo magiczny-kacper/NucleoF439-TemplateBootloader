@@ -19,7 +19,6 @@ COMMON_C_HEADERS += -I$(COMMON_DIR)/CMSIS/Include/
 
 include app_files.mk
 include boot_files.mk
-include mcuboot_files.mk
 
 # Bootloader variables
 BOOT_HEADERS += $(COMMON_C_HEADERS)
